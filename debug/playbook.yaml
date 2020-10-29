@@ -1,0 +1,20 @@
+---
+- name: For debugging and fact finding
+  hosts: k8pis
+  become: yes
+
+  tasks:
+    - name: Print mac address
+      debug:
+        msg: '{{ ansible_facts.default_ipv4.macaddress }} - {{ ansible_facts.memtotal_mb }}'
+
+    - name: Print hostvars
+      debug:
+        msg: 'System {{ hostvars[inventory_hostname].default_ipv4 }}'
+
+    - name: Print mac address
+      debug:
+        msg: '{{ ansible_facts.default_ipv4.macaddress }} - {{ ansible_facts.memtotal_mb }}'
+
+
+

@@ -1,0 +1,4 @@
+---
+- name: Molecule hello world!
+  debug:
+    msg: Hello world!

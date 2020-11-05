@@ -1,6 +1,6 @@
 # Setting up raspberry pi k8s cluster using Ansible
 
-There's 4 parts to the setup:
+There's 5 parts to the setup:
 1. SD card setup
 2. Prepare Ansible inventory file
 3. SSH setup

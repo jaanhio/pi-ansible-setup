@@ -1,0 +1,10 @@
+---
+- name: Just a fake external task
+  hosts: ubuntuvm
+
+  tasks:
+    - import_tasks: another-external-task.yaml
+
+    - name: Print mac address
+      debug:
+        msg: '{{ ansible_facts.default_ipv4.macaddress }}'

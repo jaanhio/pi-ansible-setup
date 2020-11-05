@@ -1,20 +1,18 @@
 ---
-- name: For debugging and fact finding
-  hosts: k8pis
-  become: yes
+- name: For debugging, test, etc fact finding
+  connection: local
+  gather_facts: no
+  hosts: localhost
+
+#   vars_files:
+#   - fake-api-key.yaml
 
   tasks:
-    - name: Print mac address
+    - name: Register output of 'uptime' command
+      command: uptime
+      register: system_uptime
+
+    - name: Print a message if a command resulted in a change
       debug:
-        msg: '{{ ansible_facts.default_ipv4.macaddress }} - {{ ansible_facts.memtotal_mb }}'
-
-    - name: Print hostvars
-      debug:
-        msg: 'System {{ hostvars[inventory_hostname].default_ipv4 }}'
-
-    - name: Print mac address
-      debug:
-        msg: '{{ ansible_facts.default_ipv4.macaddress }} - {{ ansible_facts.memtotal_mb }}'
-
-
-
+        msg: "Command resulted in a change"
+      when: system_uptime is changed

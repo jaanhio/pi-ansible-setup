@@ -1,12 +1,12 @@
 #!/bin/sh
 
-set -e 
+set -e
 
 SD_CARD_PATH=$1
 
 if [[ -z ${SD_CARD_PATH} ]]; then
 	echo "Please provide SD card disk path for first arg \n"
-	echo "e.g ./pi-setup.sh /dev/disk2"	
+	echo "e.g ./pi-setup.sh /dev/disk2"
 	exit 1
 fi
 

@@ -7,6 +7,8 @@ There's 4 parts to the setup:
 4. Networking setup
 5. K8s setup
 
+Misc notes can be found in `./misc/notes` folder.
+
 ---
 ## SD Card setup
 A script (`./scripts/pi-sdcard-setup.sh`) has been written to automate the preparation process, which consists of formatting SD card, copying the downloaded copy of Raspberry OS, setting up SSH.

@@ -19,7 +19,7 @@ diskutil list
 ```
 2. Execute script. Script expects disk partition as argument. 
 ```
-./scripts/pi-sd-card-setup.sh /dev/disk2
+./scripts/pi-sd-card-setup.sh /dev/disk2 <path-to-os-image>
 ```
 3. You will be prompted for confirmation on whether the partition selected is indeed the correct one.
 

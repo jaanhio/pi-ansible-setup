@@ -3,10 +3,11 @@
 set -e
 
 SD_CARD_PATH=$1
+OS_IMAGE_PATH=$2
 
-if [[ -z ${SD_CARD_PATH} ]]; then
-	echo "Please provide SD card disk path for first arg \n"
-	echo "e.g ./pi-setup.sh /dev/disk2"
+if [[ -z ${SD_CARD_PATH} ]] || [[ -z ${OS_IMAGE_PATH} ]] ; then
+	echo "Please provide SD card disk path for first arg and OS image path for second arg \n"
+	echo "e.g ./pi-setup.sh /dev/disk2 ~/Downloads/raspbian.img"
 	exit 1
 fi
 
@@ -33,7 +34,7 @@ diskutil unmountDisk ${SD_CARD_PATH}
 
 echo "SD card unmounted...\n"
 echo "Proceeding with copying raspberrypi OS onto SD card...\n"
-sudo dd bs=1m if=/Users/jianhao/Downloads/2020-08-20-raspios-buster-armhf-lite.img of=${SD_CARD_PATH}; sync
+sudo dd bs=1m if=${OS_IMAGE_PATH} of=${SD_CARD_PATH}; sync
 
 echo "Copy of raspberrypi OS completed.\n"
 echo "Enabling SSH on boot...\n"

@@ -10,6 +10,9 @@
 
   - name: Setup networking configuration
     include_tasks: ./networking/playbook.yaml
+
+  - name: Setup cgroups limit
+    includes_tasks: ./cgroups/playbook.yaml
   
   handlers:
     - name: restart sshd

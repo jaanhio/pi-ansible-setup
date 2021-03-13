@@ -5,6 +5,7 @@ There's 5 parts to the setup:
 2. Prepare Ansible inventory file
 3. SSH setup
 4. Networking setup
+5. Docker & cgroups limit setup
 5. K8s setup
 
 Misc notes can be found in `./misc/notes` folder.
@@ -75,3 +76,6 @@ The pis should switch over to the new IP addresses quickly but it didn't work fo
 ansible -i ./inventory original -m shell -a "sleep 1s; shutdown -r now" -b -B 60 -P 0
 ```
 On boot up, the pis should be changed to the newly assigned static IP addresses.
+
+## k8s setup
+Refer to https://github.com/jaanhio/k8s-playbook.

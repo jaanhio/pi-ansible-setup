@@ -3,16 +3,16 @@
 mac_address_mapping:
   "dc:a6:32:75:10:de":
     name: kube1
-    ip: "192.168.1.211"
+    ip: "192.168.1.221"
   "dc:a6:32:23:57:75":
     name: kube2
-    ip: "192.168.1.212"
+    ip: "192.168.1.222"
   "dc:a6:32:7b:4f:8a":
     name: kube3
-    ip: "192.168.1.213"
+    ip: "192.168.1.223"
   "dc:a6:32:7b:4c:75":
     name: kube4
-    ip: "192.168.1.214"
+    ip: "192.168.1.224"
 
 # Nameservers to use in resolv.conf.
 dns_nameservers:

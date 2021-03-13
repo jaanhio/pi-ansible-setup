@@ -33,7 +33,7 @@ echo "Unmounting SD card...\n"
 diskutil unmountDisk ${SD_CARD_PATH}
 
 echo "SD card unmounted...\n"
-echo "Proceeding with copying raspberrypi OS onto SD card...\n"
+echo "Proceeding with copying ${OS_IMAGE_PATH} onto SD card...\n"
 sudo dd bs=1m if=${OS_IMAGE_PATH} of=${SD_CARD_PATH}; sync
 
 echo "Copy of raspberrypi OS completed.\n"

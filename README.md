@@ -5,6 +5,7 @@ There's 5 parts to the setup:
 2. Prepare Ansible inventory file
 3. SSH setup
 4. Networking setup
+5. Docker & cgroups limit setup
 5. K8s setup
 
 Misc notes can be found in `./misc/notes` folder.
@@ -75,3 +76,40 @@ The pis should switch over to the new IP addresses quickly but it didn't work fo
 ansible -i ./inventory original -m shell -a "sleep 1s; shutdown -r now" -b -B 60 -P 0
 ```
 On boot up, the pis should be changed to the newly assigned static IP addresses.
+
+---
+## Docker & cgroups limit setup
+Encountered an issue where `kubeadm init` timed out, which prevented cluster from being created.
+
+Logs from `kubeadm init` set to high verbosity `-v 10`.
+```
+[wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
+I0311 15:10:40.823983   29341 round_trippers.go:425] curl -k -v -XGET  -H "Accept: application/json, */*" -H "User-Agent: kubeadm/v1.20.4 (linux/arm) kubernetes/e87da0b" 'https://192.168.1.221:6443/healthz?timeout=10s'
+I0311 15:10:40.824625   29341 round_trippers.go:445] GET https://192.168.1.221:6443/healthz?timeout=10s  in 0 milliseconds
+I0311 15:10:40.824699   29341 round_trippers.go:451] Response Headers:
+```
+Further checking on `kubelet` logs and status showed that `kubelet` is trying to ensure static pods are running before proceeding to next step in `kubeadm init`. This matches what is mentioned in the [init workflow](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-init/#init-workflow).
+>Generates static Pod manifests for the API server, controller-manager and scheduler. In case an external etcd is not provided, an additional static Pod manifest is generated for etcd.
+Static Pod manifests are written to /etc/kubernetes/manifests; the kubelet watches this directory for Pods to create on startup.
+Once control plane Pods are up and running, the kubeadm init sequence can continue.
+
+`journalctl -xeu kubelet`
+```
+Mar 06 07:04:49 kube1 kubelet[2772694]: I0306 07:04:49.941976 2772694 clientconn.go:948] ClientConn switching balancer to "pick_first"
+Mar 06 07:04:49 kube1 kubelet[2772694]: I0306 07:04:49.981461 2772694 kubelet.go:449] kubelet nodes not sync
+Mar 06 07:04:49 kube1 kubelet[2772694]: I0306 07:04:49.981537 2772694 kubelet.go:449] kubelet nodes not sync
+Mar 06 07:04:49 kube1 kubelet[2772694]: I0306 07:04:49.982577 2772694 kubelet_network_linux.go:56] Initialized IPv4 iptables rules.
+Mar 06 07:04:49 kube1 kubelet[2772694]: I0306 07:04:49.982767 2772694 status_manager.go:158] Starting to sync pod status with apiserver
+Mar 06 07:04:49 kube1 kubelet[2772694]: I0306 07:04:49.982832 2772694 kubelet.go:1829] Starting kubelet main sync loop.
+Mar 06 07:04:49 kube1 kubelet[2772694]: E0306 07:04:49.983023 2772694 kubelet.go:1853] skipping pod synchronization - [container runtime status check may not have completed yet, PLEG is not healthy: pleg has yet to be successful]
+Mar 06 07:04:49 kube1 kubelet[2772694]: E0306 07:04:49.984496 2772694 reflector.go:138] k8s.io/client-go/informers/factory.go:134: Failed to watch *v1.RuntimeClass: failed to list *v1.RuntimeClass: Get "https://192.168.1.221:6443/apis/node.k8s.io/v1/runtimeclasses?limit=500&resourceVersion=0": dial tcp 192.168.1.221:6>
+Mar 06 07:04:50 kube1 kubelet[2772694]: E0306 07:04:50.083263 2772694 kubelet.go:1853] skipping pod synchronization - container runtime status check may not have completed yet
+Mar 06 07:04:50 kube1 kubelet[2772694]: E0306 07:04:50.094657 2772694 controller.go:144] failed to ensure lease exists, will retry in 400ms, error: Get "https://192.168.1.221:6443/apis/coordination.k8s.io/v1/namespaces/kube-node-lease/leases/kube1?timeout=10s": dial tcp 192.168.1.221:6443: connect: connection refused
+```
+
+After some researching, chanced upon this [article](https://opensource.com/article/20/6/kubernetes-raspberry-pi) and the part mentioning about the output of `docker info` revealed that the issue was due to **incorrect docker cgroup driver** and **lack of cgroups limit support**.
+
+This playbook will enable **cgroups limit** for pis running on Ubuntu.
+
+## k8s setup
+Refer to https://github.com/jaanhio/k8s-playbook.

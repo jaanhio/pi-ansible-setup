@@ -1,8 +1,8 @@
 ---
-- hosts: k8pis
+- hosts: original
   become: true
   vars_files:
-   - ./vars/user_vars.yaml
+   - ./networking/vars.yaml
   
   tasks:
   - name: Setup SSH config
@@ -12,7 +12,7 @@
     include_tasks: ./networking/playbook.yaml
 
   - name: Setup cgroups limit
-    includes_tasks: ./cgroups/playbook.yaml
+    include_tasks: ./cgroups/playbook.yaml
   
   handlers:
     - name: restart sshd

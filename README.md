@@ -40,6 +40,13 @@ arp -na | grep <raspberry-pi-mac-vendor-prefix>
 List of raspberry pi mac vendor prefix can be found [here](https://udger.com/resources/mac-address-vendor-detail?name=raspberry_pi_foundation).
 
 ---
+### Run playbook
+```
+ansible-playbook -i inventory main.yaml
+```
+
+---
+[DEPRECATED]
 ## SSH setup
 For security reasons, various configs have been disabled for `sshd`. For more details, refer to `./ssh/file/sshd_config`.
 
@@ -49,6 +56,7 @@ ssh-copy-id -i <path-to-private-key> pi@<ip-address>
 ```
 2. Run playbook that copies the `sshd` configs
 
+[DEPRECATED COMMANDS]
 ```
 ansible-playbook -i <path-to-inventory-file> <path-to-playbook>
 ansible-playbook -i ./inventory ./ssh/playbook.yaml
@@ -68,6 +76,7 @@ MAC address has already been obtained from the `Prepare Ansible inventory file`.
 2. Also make sure various other values in template files are correct.
 3. Run playbook that sets up network
 
+[DEPRECATED COMMANDS]
 ```
 ansible-playbook -i ./inventory ./networking/playbook.yaml
 ```
